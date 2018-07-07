@@ -3,38 +3,35 @@ package main
 import (
 	"fmt"
 	"strings"
-	"strconv"
 )
-
-//type Celsius float64
-//type Kelvin float64
 
 type conversion func(v float64) float64
 
-// CelsiusToKelvin converts C To K
-func celsiusToKelvin(c float64) float64 {
-	return c + 273.15
+func fahrenheitToCelsius(v float64) float64 {
+	return (v - 32.0) * 5.0 / 9.0
 }
 
-// kelvinTo converts C To K
-func kelvinToCelsius(k float64) float64 {
-	return k - 273.15
-}
-
-func drawTable(c conversion) {
-	seperator := strings.Repeat("=", 27)
-	fmt.Println(seperator)
-	fmt.Printf("| %-10v | %-10v |\n", "C", "K")
-	fmt.Println(seperator)
-
-	for i:=-40.0; i <= 100; i+=5 {
-		v := strconv.FormatFloat(c(i), 'f', 2, 64)
-		fmt.Printf("| %-10v | %-10v |\n", i, v)
-	}
-
-	fmt.Println(seperator)
+func celsiusToFahrenheit(v float64) float64 {
+	return (v * 9 / 5) + 32
 }
 
 func main() {
-	drawTable(celsiusToKelvin)
+	drawTable("C", "F", celsiusToFahrenheit)
+	drawTable("F", "C", fahrenheitToCelsius)
+}
+
+func drawTable(source, destination string, c conversion) {
+	// Draw header
+	line := strings.Repeat("=", 41)
+	fmt.Println(line)
+	fmt.Printf("|°%-18v|°%-18v|\n", source, destination)
+	fmt.Println(line)
+
+	// Render Input
+	for i := -40; i <= 100; i += 5 {
+		fmt.Printf("|%-19v|%-19.4v|\n", i, c(float64(i)))
+	}
+
+	// Insert footer
+	fmt.Println(line)
 }
